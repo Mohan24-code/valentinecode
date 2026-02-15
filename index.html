@@ -24,16 +24,15 @@
             text-align: center;
             position: relative;
             width: 400px;
-            z-index: 100;
+            z-index: 100; /* Card stays on top */
         }
 
-        /* Personalized Name Style */
         .name-tag {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: #ff4d6d;
             font-weight: bold;
             margin-bottom: 15px;
-            font-style: italic;
+            font-family: 'Georgia', serif;
         }
 
         .gif-container {
@@ -82,7 +81,7 @@
             color: white;
             position: relative;
             transition: all 0.1s ease;
-            z-index: 50;
+            z-index: 50; /* Button jumps behind the card */
         }
 
         #muteBtn {
@@ -122,7 +121,7 @@
     <div id="muteBtn" onclick="toggleMute()">🔊</div>
 
     <div class="card" id="mainCard">
-        <div class="name-tag">deva( my kalayani ) ❤️</div>
+        <div class="name-tag">Dearest [Name] ❤️</div>
 
         <div id="first-gif" class="gif-container">
             <div class="overlay"></div>
@@ -160,16 +159,19 @@
 
             noBtn.style.position = 'absolute';
 
+            // Get the card area to avoid it entirely
             const cardRect = card.getBoundingClientRect();
             let randomX, randomY;
             let safe = false;
 
             while (!safe) {
+                // Pick a random spot on the screen
                 randomX = Math.random() * (window.innerWidth - noBtn.offsetWidth);
                 randomY = Math.random() * (window.innerHeight - noBtn.offsetHeight);
 
-                const overlapX = randomX + noBtn.offsetWidth > cardRect.left - 20 && randomX < cardRect.right + 20;
-                const overlapY = randomY + noBtn.offsetHeight > cardRect.top - 20 && randomY < cardRect.bottom + 20;
+                // Check if that spot overlaps the card area (with a 30px buffer)
+                const overlapX = randomX + noBtn.offsetWidth > cardRect.left - 30 && randomX < cardRect.right + 30;
+                const overlapY = randomY + noBtn.offsetHeight > cardRect.top - 30 && randomY < cardRect.bottom + 30;
 
                 if (!(overlapX && overlapY)) {
                     safe = true;
@@ -180,7 +182,7 @@
             noBtn.style.top = `${randomY}px`;
             noBtn.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
 
-            // Slower growth to allow more jumps
+            // Slower growth for more jumps
             yesSize += 0.15;
             yesBtn.style.transform = `scale(${yesSize})`;
 
