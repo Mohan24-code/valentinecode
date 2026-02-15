@@ -24,7 +24,7 @@
             text-align: center;
             position: relative;
             width: 400px;
-            z-index: 100; /* Card stays on top */
+            z-index: 100;
         }
 
         .name-tag {
@@ -81,7 +81,7 @@
             color: white;
             position: relative;
             transition: all 0.1s ease;
-            z-index: 50; /* Button jumps behind the card */
+            z-index: 50;
         }
 
         #muteBtn {
@@ -157,36 +157,33 @@
             const yesBtn = document.getElementById('yesBtn');
             const card = document.getElementById('mainCard');
 
-            noBtn.style.position = 'absolute';
+            attemptCount++;
 
-            // Get the card area to avoid it entirely
+            // NEW RULE: If she tries 3 times, hide the "No" button entirely
+            if (attemptCount >= 3) {
+                noBtn.style.display = 'none';
+                return;
+            }
+
+            noBtn.style.position = 'absolute';
             const cardRect = card.getBoundingClientRect();
             let randomX, randomY;
             let safe = false;
 
             while (!safe) {
-                // Pick a random spot on the screen
                 randomX = Math.random() * (window.innerWidth - noBtn.offsetWidth);
                 randomY = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-
-                // Check if that spot overlaps the card area (with a 30px buffer)
                 const overlapX = randomX + noBtn.offsetWidth > cardRect.left - 30 && randomX < cardRect.right + 30;
                 const overlapY = randomY + noBtn.offsetHeight > cardRect.top - 30 && randomY < cardRect.bottom + 30;
-
-                if (!(overlapX && overlapY)) {
-                    safe = true;
-                }
+                if (!(overlapX && overlapY)) safe = true;
             }
 
             noBtn.style.left = `${randomX}px`;
             noBtn.style.top = `${randomY}px`;
             noBtn.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
 
-            // Slower growth for more jumps
-            yesSize += 0.15;
+            yesSize += 0.3; // Grows a bit faster since she only gets 3 tries
             yesBtn.style.transform = `scale(${yesSize})`;
-
-            attemptCount++;
             yesBtn.innerText = `Yes! ${yesEmojis[attemptCount % yesEmojis.length]}`;
         }
 
